@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TencentCampDemo 技术报告</title>
+  <style>
+    @page { size: A4; margin: 12mm 14mm; }
+    * { box-sizing: border-box; }
+    html { background: #d9dde3; }
+    body { margin: 0; color: #18202b; background: #fff; font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 10.5pt; line-height: 1.65; }
+    .page { position: relative; min-height: 273mm; padding: 7mm 7mm 14mm; page-break-after: always; overflow: hidden; background: #fff; }
+    .page:last-child { page-break-after: auto; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { font-size: 29pt; line-height: 1.25; letter-spacing: .5pt; }
+    h2 { margin-bottom: 5mm; padding-bottom: 2.5mm; border-bottom: 2px solid #ef7f1a; font-size: 19pt; color: #12243a; }
+    h3 { margin: 3.5mm 0 1.5mm; font-size: 12.5pt; color: #c45e08; }
+    p { margin-bottom: 2.4mm; }
+    ul { margin: 1.5mm 0 3mm; padding-left: 5.5mm; }
+    li { margin: 1mm 0; }
+    .cover { display: flex; min-height: 255mm; flex-direction: column; justify-content: center; background: linear-gradient(145deg, #0f1f34 0%, #1d3857 62%, #ef7f1a 62.3%, #ef7f1a 66%, #fff 66.3%); color: #fff; padding: 20mm 17mm 34mm; }
+    .cover .eyebrow { text-transform: uppercase; color: #f9ae61; font-size: 11pt; letter-spacing: 2.2pt; }
+    .cover h1 { max-width: 155mm; margin: 6mm 0 5mm; }
+    .cover .subtitle { max-width: 145mm; color: #d8e4ef; font-size: 14pt; }
+    .cover .meta { margin-top: 15mm; display: grid; grid-template-columns: 29mm 1fr; gap: 2mm 5mm; font-size: 10.5pt; }
+    .cover .meta b { color: #f7ad62; }
+    .cover a { color: #fff; }
+    .cover-note { position: absolute; left: 24mm; right: 24mm; bottom: 20mm; color: #39475a; font-size: 9.5pt; }
+    .lead { font-size: 12pt; color: #34485f; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; }
+    .card { padding: 4mm; border: 1px solid #dce2e9; border-radius: 2.5mm; background: #f7f9fb; }
+    .card strong { display: block; color: #173759; font-size: 11.5pt; }
+    .score { display: flex; align-items: center; justify-content: center; min-height: 27mm; border-radius: 3mm; background: #152b45; color: #fff; text-align: center; }
+    .score b { display: block; color: #ff9a3d; font-size: 22pt; line-height: 1.1; }
+    .flow { display: grid; grid-template-columns: 1fr 10mm 1fr 10mm 1fr; align-items: stretch; gap: 2mm; margin: 4mm 0; }
+    .flow .step { padding: 4mm 3mm; border-radius: 2mm; background: #edf3f8; border-top: 3px solid #ef7f1a; text-align: center; }
+    .flow .arrow { display: flex; align-items: center; justify-content: center; color: #ef7f1a; font-size: 20pt; }
+    figure { margin: 3mm 0 4mm; }
+    figure img { display: block; width: 100%; max-height: 101mm; object-fit: contain; border: 1px solid #cbd3dc; background: #171a1f; }
+    figcaption { margin-top: 1.5mm; color: #536170; font-size: 8.8pt; line-height: 1.45; }
+    .pair figure img { max-height: 72mm; }
+    .wide img { max-height: 88mm; }
+    .tag { display: inline-block; margin: 0 1mm 1mm 0; padding: .8mm 2.3mm; border-radius: 9mm; background: #e9f0f7; color: #25486c; font-size: 8.7pt; }
+    .ok { color: #167242; font-weight: 700; }
+    .warn { padding: 3mm 4mm; border-left: 3px solid #ef7f1a; background: #fff4e9; color: #744016; }
+    table { width: 100%; border-collapse: collapse; margin: 3mm 0; font-size: 9.3pt; }
+    th, td { padding: 2.2mm 2.6mm; border: 1px solid #d6dde5; vertical-align: top; }
+    th { background: #173451; color: #fff; text-align: left; }
+    tr:nth-child(even) td { background: #f6f8fa; }
+    code { padding: .3mm 1mm; background: #edf1f5; border-radius: 1mm; font-family: Consolas, monospace; font-size: 9pt; }
+    .footer { position: absolute; left: 7mm; right: 7mm; bottom: 3mm; padding-top: 1.5mm; border-top: 1px solid #d7dde4; display: flex; justify-content: space-between; color: #6c7885; font-size: 8pt; }
+    .small { font-size: 9pt; color: #576574; }
+    a { color: #0d5b9b; text-decoration: none; }
+    @media screen { body { width: 210mm; margin: 10mm auto; box-shadow: 0 0 20px #87909a; } }
+    @media print { html, body { background: #fff; } body { width: auto; margin: 0; box-shadow: none; } .page { min-height: 273mm; } }
+  </style>
+</head>
+<body>
+  <section class="page cover">
+    <div class="eyebrow">UE5 Multiplayer Game Demo</div>
+    <h1>TencentCampDemo<br>多人竞技场 Demo 技术报告</h1>
+    <p class="subtitle">基于 UE5 First Person Arena 模板的双人 Listen Server PvPvE 计分对战</p>
+    <div class="meta">
+      <b>作者</b><span>黄文灏</span>
+      <b>学校</b><span>香港中文大学（深圳）</span>
+      <b>引擎</b><span>Unreal Engine 5.7</span>
+      <b>仓库</b><span><a href="https://github.com/DIO-KONG/TencentCampDemo">github.com/DIO-KONG/TencentCampDemo</a></span>
+      <b>日期</b><span>2026 年 6 月 21 日</span>
+    </div>
+    <div class="cover-note">开局一课客户端大作业 · Demo 视频与本报告共同构成功能验收材料</div>
+  </section>
+
+  <section class="page">
+    <h2>1. 项目概述与玩法</h2>
+    <p class="lead">本项目在官方 First Person 模板的 Arena 变体基础上，完成了一个可供两名玩家在 Listen Server 中共同对抗 AI、也可互相战斗的 PvPvE Demo。</p>
+    <div class="grid-3">
+      <div class="card"><strong>AI 战斗</strong>敌人能够移动、寻找并攻击任意存活玩家；Host 与 Client 均可击败敌人。</div>
+      <div class="card"><strong>多人网络</strong>使用两人 Listen Server，Server 权威处理弹丸、伤害、死亡、计分和比赛结束。</div>
+      <div class="card"><strong>胜负闭环</strong>个人分数同步到 PlayerState，率先达到目标分的玩家获得 VICTORY。</div>
+    </div>
+    <h3>计分规则</h3>
+    <div class="grid-3">
+      <div class="score"><span>击杀 NPC<b>+1</b></span></div>
+      <div class="score"><span>击杀对手<b>+3</b></span></div>
+      <div class="score"><span>目标分数<b>10</b></span></div>
+    </div>
+    <h3>从模板到 Demo 的主要开发</h3>
+    <table>
+      <tr><th>模板已有基础</th><th>本项目新增或修复</th></tr>
+      <tr><td>Arena 地图、武器、玩家/NPC 生命与基础 AI</td><td>Client 开火到 Server 权威伤害链、Projectile 与关键状态复制</td></tr>
+      <tr><td>单机敌人生成与死亡表现</td><td>Spawner 客户端重复生成修复、多人目标选择验证、有限持续补充生成</td></tr>
+      <tr><td>基础 HUD 与第一/第三人称素材</td><td>远端模型、动画空引用、Client 血量/受击反馈、多人布娃娃与死亡视角修复</td></tr>
+      <tr><td>模板队伍式计分雏形</td><td>PlayerState 个人计分、GameState 比赛状态、目标分胜负与双端结果 UI</td></tr>
+    </table>
+    <div class="footer"><span>TencentCampDemo 技术报告</span><span>2 / 7</span></div>
+  </section>
+
+  <section class="page">
+    <h2>2. 多人网络架构</h2>
+    <p>实现遵循“Server 管规则、Client 管本地表现”的边界。Client 不能直接生成具备权威伤害的弹丸，而是通过自己拥有的 Character 发起 Server RPC。</p>
+    <div class="flow">
+      <div class="step"><b>Owning Client</b><br>输入、瞄准、本地动画</div><div class="arrow">›</div>
+      <div class="step"><b>Server RPC</b><br>校验并生成 Projectile</div><div class="arrow">›</div>
+      <div class="step"><b>Server Authority</b><br>命中、伤害、HP、死亡</div>
+    </div>
+    <div class="grid-2">
+      <div class="card"><strong>共享世界表现</strong>NPC 与玩家死亡布娃娃使用 Reliable Multicast，使所有客户端看到一致的死亡结果。</div>
+      <div class="card"><strong>拥有者专属表现</strong>血量 UI、受击特效、死亡摄像机与结果界面通过 Owning Client RPC 更新。</div>
+      <div class="card"><strong>同步状态</strong>PlayerState 保存并同步个人分数；GameState 同步比赛结束、胜者及 Target Score。</div>
+      <div class="card"><strong>AI 与生成</strong>Spawner 只在 Server 生效，避免 Client 再生成不会移动的本地 NPC 副本。</div>
+    </div>
+    <h3>关键网络问题与处理</h3>
+    <ul>
+      <li>Weapon Actor 本身不复制，因此将 Server RPC 放在 Client 拥有且复制的 Character 上。</li>
+      <li>Projectile 的生成、Process Hit 与 Apply Damage 由 Server 权威执行，并复制移动/结果。</li>
+      <li>第一人称 Mesh 设为 Only Owner See，第三人称 Mesh 设为 Owner No See，修复远端双身体。</li>
+      <li>第一人称武器 Anim Blueprint 增加 Is Locally Controlled 保护，避免模拟代理读取空 Controller。</li>
+    </ul>
+    <p><span class="tag">Server RPC</span><span class="tag">Replication</span><span class="tag">RepNotify</span><span class="tag">Multicast</span><span class="tag">Owning Client RPC</span></p>
+    <div class="footer"><span>多人架构：Server 权威 + 分层表现 RPC</span><span>3 / 7</span></div>
+  </section>
+
+  <section class="page">
+    <h2>3. Client 受伤反馈与玩家死亡同步</h2>
+    <p>模板原逻辑在 Server 的 AnyDamage 链上直接调用 UI，并将规则、物理表现和本地摄像机混在同一个 Die 事件中。普通 Client 的血量数值虽已改变，但本地 UI、受击特效及死亡视角无法自动更新。</p>
+    <div class="grid-2 pair">
+      <figure><img src="03_BP_ShooterCharacter_修复前_受伤UI仅在Server调用.png" alt="修复前受伤逻辑"><figcaption>修复前：Server 修改 HP 后直接调用 Update Health UI，不能驱动远端拥有者的本地界面。</figcaption></figure>
+      <figure><img src="05_BP_ShooterCharacter_修复Client血量UI与受击特效同步.png" alt="修复后受伤反馈"><figcaption>修复后：Client Receive Damage Feedback 作为 Owning Client RPC，同时更新血量条与受击特效。</figcaption></figure>
+    </div>
+    <div class="grid-2 pair">
+      <figure><img src="04_BP_ShooterCharacter_修复前_死亡表现仅在Server执行.png" alt="修复前玩家死亡"><figcaption>修复前：布娃娃、输入和 Camera 切换均在同一 Server Die 链执行。</figcaption></figure>
+      <figure><img src="01_BP_ShooterCharacter_修复玩家死亡布娃娃与Client死亡视角.png" alt="修复后玩家死亡"><figcaption>修复后：Multicast Play Player Death 同步布娃娃；Client Enter Death View 只处理拥有者摄像机。</figcaption></figure>
+    </div>
+    <p class="ok">验证结果：Host/Client 生命、受击特效、死亡、布娃娃、死亡摄像机与销毁组合回归均通过，未发现新的 Runtime Error。</p>
+    <div class="footer"><span>表现同步：共享表现与本地表现拆分</span><span>4 / 7</span></div>
+  </section>
+
+  <section class="page">
+    <h2>4. NPC 死亡、AI 与持续生成</h2>
+    <p>NPC Die 原本是 Not Replicated 事件，Server 可以完成规则与销毁，但 Client 看不到布娃娃。修改后保留 Server 的死亡判定、OnDeath、停止移动和销毁流程，把胶囊碰撞关闭与 Mesh 物理表现拆到 Reliable Multicast。</p>
+    <figure class="wide"><img src="02_BP_ShooterNPC_修复NPC死亡布娃娃多人同步.png" alt="NPC 多人死亡同步"><figcaption>BP_ShooterNPC：Server 死亡规则调用 Multicast Play Death，所有端统一启用 Ragdoll 碰撞和物理混合。</figcaption></figure>
+    <div class="grid-2">
+      <div>
+        <h3>多玩家索敌</h3>
+        <ul>
+          <li>敌人可攻击 Host 与普通 Client。</li>
+          <li>目标死亡或失效后能够继续选择有效玩家。</li>
+          <li>双人 PIE 的目标切换测试已通过。</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Spawner 修复</h3>
+        <ul>
+          <li>关闭 Spawner 的 Net Load on Client，消除 Client 本地静止 NPC 副本。</li>
+          <li>Arena 放置两个 Spawner，每个同时维持一个活动 NPC。</li>
+          <li>Spawn Count 设为 10，整场最多生成 20 个 NPC。</li>
+        </ul>
+      </div>
+    </div>
+    <p class="ok">验证结果：双方看到的 NPC 数量、移动、受伤、死亡与销毁结果一致；敌人死亡后可由对应出生点继续补充。</p>
+    <div class="footer"><span>AI：共享目标空间与 Server-only 生成</span><span>5 / 7</span></div>
+  </section>
+
+  <section class="page">
+    <h2>5. 个人计分与比赛胜负</h2>
+    <p>模板原计分按死亡对象阵营增加固定队伍分数，无法标识实际击杀者。现有实现从 Apply Damage 的 Instigator Controller 传递 Killer Controller，在死亡事件中取得击杀者 PlayerState，并统一调用 Add Kill Score。</p>
+    <div class="grid-2 pair">
+      <figure><img src="07_BP_ShooterNPC_实现NPC击杀加1分与防止重复计分.png" alt="NPC 计分"><figcaption>NPC Die：Do Once 防止重复死亡，根据 Killer Controller 获取 BP_ShooterPlayerState，增加 1 分。</figcaption></figure>
+      <figure><img src="06_BP_ShooterCharacter_实现PvP击杀加3分与多人死亡表现.png" alt="PVP 计分"><figcaption>Character Die：有效玩家击杀者获得 3 分，同时触发多人死亡表现和拥有者死亡视角。</figcaption></figure>
+    </div>
+    <h3>比赛状态闭环</h3>
+    <div class="flow">
+      <div class="step"><b>PlayerState</b><br>Authority-only 加分</div><div class="arrow">›</div>
+      <div class="step"><b>GameMode</b><br>Finish Match 防重复</div><div class="arrow">›</div>
+      <div class="step"><b>GameState</b><br>同步 Winner / Finished</div>
+    </div>
+    <ul>
+      <li>加分前检查 Match Finished；使用加分后的分数与 Target Score 比较。</li>
+      <li>GameMode 先设置 Winner Player State，再设置 Match Finished，比赛结束后冻结双方分数。</li>
+      <li>GameMode 遍历 PlayerController，并通过 Reliable Owning Client RPC 显示 VICTORY 或 DEFEAT。</li>
+      <li>玩家死亡后自动重生，PlayerState 使个人分数跨 Pawn 保留。</li>
+    </ul>
+    <p class="ok">验证结果：Host 与 Client 双向获胜均正确显示相反结果，Widget 不重复创建，正式目标分已恢复为 10。</p>
+    <div class="footer"><span>Gameplay Framework：GameMode / GameState / PlayerState</span><span>6 / 7</span></div>
+  </section>
+
+  <section class="page">
+    <h2>6. 测试结果、运行方式与结论</h2>
+    <h3>多人 PIE 验收</h3>
+    <table>
+      <tr><th>场景</th><th>结果</th></tr>
+      <tr><td>两名玩家生成、控制、互见及远端动画</td><td class="ok">通过</td></tr>
+      <tr><td>Host / Client 分别击杀 NPC，双方死亡结果一致</td><td class="ok">通过</td></tr>
+      <tr><td>AI 攻击双方玩家并切换有效目标</td><td class="ok">通过</td></tr>
+      <tr><td>NPC +1、PvP +3、AI 击杀不误加分</td><td class="ok">通过</td></tr>
+      <tr><td>玩家重生后分数保留</td><td class="ok">通过</td></tr>
+      <tr><td>Host / Client 双方向达到目标分并显示胜负</td><td class="ok">通过</td></tr>
+    </table>
+    <h3>运行方式</h3>
+    <ol>
+      <li>使用 Unreal Engine 5.7 打开 <code>TencentCampDemo.uproject</code>。</li>
+      <li>默认地图为 <code>/Game/Variant_Shooter/Lvl_ArenaShooter</code>，默认 GameMode 为 <code>BP_ShooterGameMode</code>。</li>
+      <li>在 PIE 设置中选择 2 Players、Listen Server、独立窗口运行。</li>
+    </ol>
+    <h3>结论</h3>
+    <p>项目完成了作业要求的三项核心能力：可移动并攻击玩家的敌人、玩家可击败敌人；基础计分和目标分胜利机制；双人 Listen Server 网络对战。开发重点不是扩充素材，而是将模板的单机逻辑拆分为 Server 权威规则、全端共享表现和拥有者本地反馈三个层次。</p>
+    <div class="warn"><b>已知限制：</b>比赛结束后分数会冻结并显示结果，但尚未完整停止玩家输入、AI 伤害和 Spawner 补充。演示在结果界面出现后结束。当前报告不将未执行的打包构建写成已验证事项。</div>
+    <h3>项目仓库</h3>
+    <p><a href="https://github.com/DIO-KONG/TencentCampDemo">https://github.com/DIO-KONG/TencentCampDemo</a></p>
+    <p class="small">仓库包含 Unreal 项目文件、开发阶段记录、蓝图修改截图、演示视频、HTML 报告及本 PDF。Unreal 二进制资产与视频使用 Git LFS 管理。</p>
+    <div class="footer"><span>黄文灏 · 香港中文大学（深圳）</span><span>7 / 7</span></div>
+  </section>
+</body>
+</html>
