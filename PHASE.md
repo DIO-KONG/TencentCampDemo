@@ -1,7 +1,7 @@
 # TencentCampDemo 开发阶段记录
 
 > 最后更新：2026-06-21  
-> 当前阶段：**Phase 0 / Phase 7：Git 基线与紧急提交准备**  
+> 当前阶段：**Phase 7：提交材料完成与最终上传**  
 > 状态原则：只有经过编译、运行测试或用户明确确认的结果，才可标记为已完成。Blueprint 内部 Graph 尚未审阅时，不根据资产名猜测实现。
 
 ## 1. 项目总体目标
@@ -40,9 +40,10 @@
   - `GlobalDefaultGameMode=/Game/Variant_Shooter/Blueprints/BP_ShooterGameMode`
 - `DefaultEngine.ini` 设置 `bUseSplitscreen=True`；这不是网络多人功能已完成的证据。
 - Arena 地图带有 World Partition 配置侧车文件。
-- 根目录 `PHASE.md` 和 `README.md` 在本次审计前均为空；本次未修改 `README.md`。
-- 当前目录不是 Git 仓库（`git status`、`git log` 和 `git lfs track` 均返回 not a git repository）。根目录也没有 `.gitignore` 或 `.gitattributes`。
-- `DerivedDataCache`、`Intermediate`、`Saved` 已经实际存在，建立 Git 仓库前必须通过 `.gitignore` 排除。
+- 根目录 `PHASE.md` 记录开发过程，`README.md` 已包含稳定玩法、运行方式、多人实现和提交材料入口。
+- 项目已初始化为本地 `main` Git 仓库，并关联 `https://github.com/DIO-KONG/TencentCampDemo.git`。
+- `.gitignore` 已排除 `Binaries`、`DerivedDataCache`、`Intermediate`、`Saved`、IDE 缓存及本地报告渲染临时文件。
+- `.gitattributes` 已通过 Git LFS 管理 `.uasset`、`.umap`、`.mp4` 和 `.pdf`。
 
 #### 用户单机运行观察确认
 
@@ -137,7 +138,7 @@
 
 验收：`git status` 只包含应提交的项目文件，生成目录被忽略，LFS 规则生效，且存在用户确认可恢复的模板基线提交。
 
-当前结果：**未完成，且是阻塞项。当前目录不是 Git 仓库，也没有忽略或 LFS 规则。**
+当前结果：**已完成。** 2026-06-21 建立 `main` 基线提交，482 个项目/文档文件进入版本控制，其中 461 个 Unreal、视频或 PDF 文件由 Git LFS 管理；生成目录未纳入仓库。远程 `main` 与本地提交 SHA 已核对一致。
 
 ### Phase 1：模板结构与多人能力审计
 
@@ -216,17 +217,15 @@
 
 ### 当前阶段
 
-**Phase 0 / Phase 7：Git 基线与紧急提交准备。**
+**Phase 7：提交材料完成与最终上传。**
 
 根据 2026-06-21 截止前评估，作业三项功能要求均已有运行测试证据，Demo 功能层面基本达标。立即停止新增玩法，优先录制 Demo、建立 GitHub 可恢复仓库并完成 PDF。
 
 ### 当前阻塞
 
-1. 项目尚未建立 Git 仓库，缺少 `.gitignore`、`.gitattributes`、LFS 规则和基线提交。
-2. Blueprint 为二进制资产，本次未审阅其内部 Graph，不能从文件扫描确认复制、RPC、伤害权威或比赛流程。
-3. Demo 视频、PDF 技术说明和 GitHub 链接尚未确认完成；这是当前真正的提交阻塞。
-4. Match Finished 后分数会冻结，但玩家输入、AI 伤害和 Spawner 补充尚未停止；该项降级为非阻断优化，视频在结果出现后结束即可。
-5. 项目尚未验证打包，但题面提交格式只明确要求 Demo 视频与 PDF；在时间极少时，打包优先级低于视频、PDF 和 GitHub。
+1. Match Finished 后分数会冻结，但玩家输入、AI 伤害和 Spawner 补充尚未停止；该项为已在报告披露的非阻断限制，视频在结果出现后结束即可。
+2. 项目尚未验证打包，但题面提交格式只明确要求 Demo 视频与 PDF；当前交付证据采用双窗口 PIE 录制。
+3. GitHub、视频和 PDF 已准备完成，剩余外部步骤仅为用户在作业平台上传最终文件。
 
 ### 最近测试结果
 
@@ -298,38 +297,21 @@
 - NPC `Die` 拆分边界已确认：OnDeath、GameMode 计分、Dead Tag、Movement 停止、Delay/Destroy 必须只在 Server；Capsule 关闭与 Mesh Ragdoll/Simulate Physics 可由 Server 调用 Reliable Multicast 在所有端执行。不能把整个 `Die` 直接改成 Multicast。
 - 玩家 `Die` 的拆分边界已由截图确认：GameMode 计分、Dead Tag、Movement 与 Delay/Destroy 属于 Server 规则；Mesh 布娃娃属于全端共享表现；本地武器停用、输入/UI 与摄像机切换属于 Owning Client 表现。不能把整个 `Die` 改成 Multicast，也不能指望 Server 侧 PlayerController 调用更新远端 Client 的本地 UI/摄像机。
 
-## 8. 下一步具体操作：截止前最短提交闭环
+## 8. 当前提交成果与下一步
 
-不再修改玩法 Blueprint。按以下顺序保存可提交证据，任何赛后冻结、限时模式、表现优化和重构全部推迟。
+### 已完成成果
 
-### 操作位置与顺序
+- GitHub 仓库：`https://github.com/DIO-KONG/TencentCampDemo`，本地与远程 `main` SHA 已核对一致。
+- 正式 PDF：`output/pdf/黄文灏-香港中文大学（深圳）-开局一课客户端大作业.pdf`。
+- 可打印 HTML：`report/黄文灏-香港中文大学（深圳）-Demo技术报告.html`。
+- Demo 视频：`report/PVP.mp4` 与 `report/Vectory.mp4`。
+- PDF 已验证为 7 页 A4，逐页渲染无裁切/重叠；姓名、学校、GitHub 文本和链接注释均可解析。
 
-1. 立即录制一次完整双窗口 Listen Server 演示：双方生成和互见；AI 移动/攻击 Host 与 Client；Host/Client 均击杀 NPC；本地分数 +1；一次 PvP 击杀 +3 与重生；达到 10 分后双方分别显示 VICTORY/DEFEAT。结果出现后立即结束录像。
-2. 保存所有 Blueprint 与 Arena 地图，关闭 PIE 后复制一份项目目录或至少保留当前可运行副本，避免提交前误改。
-3. 建立 Git 仓库前先创建 UE `.gitignore`，排除 `DerivedDataCache/`、`Intermediate/`、`Saved/`、`Binaries/` 和 IDE 缓存；对 `.uasset`、`.umap` 配置 Git LFS，再提交并推送。当前根目录不是 Git 仓库，不能跳过这一步。
-4. PDF 用最短结构：项目/玩法概述；多人网络架构（Character Server RPC、Server Projectile/伤害、Replication/Multicast/Owning Client）；AI 与生成；PlayerState 计分与 GameState 胜负；测试结果；运行方式；GitHub 链接。
-5. README 至少写明 UE 版本、默认 Arena 地图、两人 PIE Listen Server 启动方法、玩法与计分规则。
-6. 按要求将视频和 PDF 命名为 `姓名-学校-开局一课客户端大作业`，最终打开检查视频可播放、PDF 链接可点击、GitHub 仓库可访问。
+### 用户下一步
 
-### 预期结果
-
-- 视频清楚证明题目要求的敌人战斗、基础计分/胜利和多人网络对战。
-- GitHub 能恢复项目且不包含 UE 生成目录；PDF 包含简要技术实现与有效链接。
-- 截止前提交文件命名、格式和可打开性均检查完成。
-
-### 用户需要回传
-
-- 优先完成视频；随后确认是否需要我立即生成 `.gitignore`、`.gitattributes`、README/PDF 文案。
-
-### 推荐提交文件（9 个名额内）
-
-建议只使用 3 个文件：
-
-1. `姓名-学校-开局一课客户端大作业-01-完整Demo.mp4`：双窗口完整玩法，覆盖 AI、双方攻击、计分、PvP、重生和胜负。
-2. `姓名-学校-开局一课客户端大作业-02-Client胜利验证.mp4`：短视频补充 Client 达到目标分、两端反向 VICTORY/DEFEAT，以及共享死亡/生成状态一致。
-3. `姓名-学校-开局一课客户端大作业.pdf`：技术说明与 GitHub 链接。
-
-其余 6 个上传名额保留，不为凑数量拆分重复内容。
+1. 在作业平台上传正式 PDF 与两个 MP4（共 3 个文件，低于 9 个文件上限）。
+2. 上传前各播放一次视频，并在 PDF 中点击 GitHub 链接确认浏览器可访问。
+3. 不再进行非必要 Blueprint 修改；如必须修改项目，需重新保存、测试、提交并推送。
 
 ## 9. 后续 Phase 1 人工测试清单（首测通过后逐项执行）
 
