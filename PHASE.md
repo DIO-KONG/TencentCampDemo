@@ -303,7 +303,7 @@
 
 - GitHub 仓库：`https://github.com/DIO-KONG/TencentCampDemo`，本地与远程 `main` SHA 已核对一致。
 - 正式 PDF：`output/pdf/黄文灏-香港中文大学（深圳）-开局一课客户端大作业.pdf`。
-- 可打印 HTML：`report/黄文灏-香港中文大学（深圳）-Demo技术报告.html`。
+- 可打印 HTML：`report/黄文灏-香港中文大学(深圳)-开局一课客户端大作业.html`。
 - Demo 视频：`report/PVP.mp4` 与 `report/Vectory.mp4`。
 - PDF 已验证为 7 页 A4，逐页渲染无裁切/重叠；姓名、学校、GitHub 文本和链接注释均可解析。
 
